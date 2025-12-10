@@ -8,7 +8,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
+# Copy and install Python dependencies
 COPY requirements.txt .
+
+# CRITICAL: Install CPU-only version of PyTorch first to reduce image size (saves ~2GB+)
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
