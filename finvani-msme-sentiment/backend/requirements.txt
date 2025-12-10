@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+feedparser
+torch
+transformers
+sqlalchemy
+psycopg2-binary
+pydantic
+alembic
+python-multipart

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Model
+model_output/
+*.pt
+*.bin
+*.safetensors
+
+# Node/Frontend
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+
+# Logs
+*.log
+debug_ingestion.py
+debug_sentiment.py
+debug_results.txt
+
+# OS
+Thumbs.db
