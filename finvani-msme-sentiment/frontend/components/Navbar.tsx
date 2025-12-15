@@ -1,4 +1,36 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { checkBackendHealth } from "@/lib/apiClient";
+
+function StatusIndicator() {
+    const [isOnline, setIsOnline] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const check = async () => {
+            const status = await checkBackendHealth();
+            setIsOnline(status);
+        };
+
+        // Check immediately
+        check();
+
+        // Check every 30 seconds
+        const interval = setInterval(check, 30000);
+        return () => clearInterval(interval);
+    }, []);
+
+    if (isOnline === null) return null; // Loading
+
+    return (
+        <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border ${isOnline
+                ? "bg-green-900/30 border-green-500/50 text-green-400"
+                : "bg-red-900/30 border-red-500/50 text-red-400"
+            }`}>
+            <span className={`w-2 h-2 rounded-full mr-2 ${isOnline ? "bg-green-500" : "bg-red-500 animate-pulse"}`}></span>
+            {isOnline ? "System Online" : "Backend Offline"}
+        </div>
+    );
+}
 
 export default function Navbar() {
     return (
@@ -11,6 +43,12 @@ export default function Navbar() {
                                 FinVani AI
                             </span>
                         </Link>
+
+                        {/* Backend Status Indicator */}
+                        <div className="ml-4 flex items-center space-x-2">
+                            <StatusIndicator />
+                        </div>
+
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
                                 <Link

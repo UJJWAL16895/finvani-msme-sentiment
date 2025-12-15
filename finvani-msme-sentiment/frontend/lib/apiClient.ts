@@ -64,3 +64,13 @@ export async function triggerRefresh(): Promise<void> {
         console.error("Error triggering refresh:", error);
     }
 }
+
+export async function checkBackendHealth(): Promise<boolean> {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    try {
+        const response = await fetch(`${API_URL}/health`);
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
+}
