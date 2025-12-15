@@ -9,6 +9,11 @@ origins = [
     "http://localhost:3000",
 ]
 
+# Add production origins from environment variable
+env_origins = os.getenv("ALLOWED_ORIGINS")
+if env_origins:
+    origins.extend([origin.strip() for origin in env_origins.split(",")])
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
