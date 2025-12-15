@@ -11,10 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy and install Python dependencies
 COPY requirements.txt .
 
-# CRITICAL: Install CPU-only version of PyTorch first to reduce image size (saves ~2GB+)
+# CRITICAL STEP: 
+# 1. Remove 'torch' from requirements.txt inside the container so pip doesn't try to overwrite our CPU version with the huge GPU version.
+RUN sed -i '/torch/d' requirements.txt
+
+# 2. Install CPU-only torch explicitly (~150MB vs 2GB+)
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
-# Install remaining dependencies
+# 3. Install the rest of the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
