@@ -27,6 +27,22 @@ app.add_middleware(
 app.include_router(analyze.router)
 app.include_router(news.router)
 
+@app.on_event("startup")
+async def startup_event():
+    print("🚀 Triggering initial news ingestion on startup...")
+    try:
+        from src.api.routers.news import run_ingestion_task
+        # Run directly (blocking) or in background? 
+        # For startup, blocking safely ensures data is ready before first request.
+        # But for faster boot, we can background it. 
+        # Given Railway 512MB limit, safer to background it so health check passes fast.
+        import threading
+        t = threading.Thread(target=run_ingestion_task)
+        t.start()
+        print("✅ Background ingestion thread started.")
+    except Exception as e:
+        print(f"❌ Startup ingestion failed: {e}")
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
