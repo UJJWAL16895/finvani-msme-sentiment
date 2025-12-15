@@ -8,3 +8,6 @@ psycopg2-binary
 pydantic
 alembic
 python-multipart
+python-dateutil
+protobuf
+sentencepiece
