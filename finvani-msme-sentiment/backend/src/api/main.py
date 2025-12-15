@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from src.api.routers import analyze, news
 
 app = FastAPI(title="FinVani API")
