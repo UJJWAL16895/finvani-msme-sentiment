@@ -28,10 +28,10 @@ class SentimentAnalyzer:
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Check if local path exists, if not fallback to default multilingual model
+        # Check if local path exists, if not fallback to default smaller model to avoid OOM on free tier
         if not os.path.exists(model_path):
-            logger.warning(f"Local model path '{model_path}' not found. Downloading default multilingual model...")
-            self.model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
+            logger.warning(f"Local model path '{model_path}' not found. Downloading lightweight English model (DistilBERT) to save memory...")
+            self.model_path = "distilbert-base-uncased-finetuned-sst-2-english"
         else:
             self.model_path = model_path
         
