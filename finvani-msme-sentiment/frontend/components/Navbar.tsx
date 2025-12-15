@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { checkBackendHealth } from "@/lib/apiClient";
@@ -23,8 +25,8 @@ function StatusIndicator() {
 
     return (
         <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border ${isOnline
-                ? "bg-green-900/30 border-green-500/50 text-green-400"
-                : "bg-red-900/30 border-red-500/50 text-red-400"
+            ? "bg-green-900/30 border-green-500/50 text-green-400"
+            : "bg-red-900/30 border-red-500/50 text-red-400"
             }`}>
             <span className={`w-2 h-2 rounded-full mr-2 ${isOnline ? "bg-green-500" : "bg-red-500 animate-pulse"}`}></span>
             {isOnline ? "System Online" : "Backend Offline"}
