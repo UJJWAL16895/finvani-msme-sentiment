@@ -13,7 +13,9 @@ origins = [
 # Add production origins from environment variable
 env_origins = os.getenv("ALLOWED_ORIGINS")
 if env_origins:
-    origins.extend([origin.strip() for origin in env_origins.split(",")])
+    # Split by comma, strip whitespace, AND strip trailing slash to handle common user error
+    # Example: "https://site.com/" -> "https://site.com" (Matches browser Origin header)
+    origins.extend([origin.strip().rstrip("/") for origin in env_origins.split(",")])
 
 app.add_middleware(
     CORSMiddleware,
