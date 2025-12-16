@@ -39,7 +39,10 @@ def run_ingestion_task():
         data_dir = get_data_dir()
         ingester = GoogleNewsIngester(str(data_dir))
         queries = ["MSME", "SME India", "Business Loan", "Economy"]
-        ingester.run_ingestion(queries, LANGUAGES)
+        # Limit startup ingestion to top languages to prevent CPU freeze on free tier
+        # Full list available via manual trigger if needed
+        startup_langs = ["en", "hi", "ta"] 
+        ingester.run_ingestion(queries, startup_langs)
         logger.info("Background ingestion task completed.")
     except Exception as e:
         logger.error(f"Background ingestion failed: {e}")
