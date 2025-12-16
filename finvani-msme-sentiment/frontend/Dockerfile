@@ -9,6 +9,10 @@ RUN npm ci
 # Copy the rest of the code
 COPY . .
 
+# Accept build argument for Next.js static inlining
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Build the application
 RUN npm run build
 
