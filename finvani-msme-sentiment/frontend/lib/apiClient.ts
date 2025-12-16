@@ -11,11 +11,11 @@ export type NewsArticle = {
     summary?: string;
 };
 
-export async function analyzeSentiment(text: string): Promise<SentimentResponse> {
-    const API_URL = "http://localhost:8000/analyze/";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+export async function analyzeSentiment(text: string): Promise<SentimentResponse> {
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_BASE_URL}/analyze/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -36,9 +36,9 @@ export async function analyzeSentiment(text: string): Promise<SentimentResponse>
 }
 
 export async function fetchHeadlines(lang: string = "en", randomize: boolean = false): Promise<NewsArticle[]> {
-    const API_URL = `http://localhost:8000/news/latest?lang=${lang}&randomize=${randomize}`;
+    const url = `${API_BASE_URL}/news/latest?lang=${lang}&randomize=${randomize}`;
     try {
-        const response = await fetch(API_URL, { cache: 'no-store' });
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) {
             throw new Error("Failed to fetch news");
         }
@@ -57,18 +57,17 @@ export async function fetchHeadlines(lang: string = "en", randomize: boolean = f
 }
 
 export async function triggerRefresh(): Promise<void> {
-    const API_URL = "http://localhost:8000/news/refresh";
+    const url = `${API_BASE_URL}/news/refresh`;
     try {
-        await fetch(API_URL, { method: "POST" });
+        await fetch(url, { method: "POST" });
     } catch (error) {
         console.error("Error triggering refresh:", error);
     }
 }
 
 export async function checkBackendHealth(): Promise<boolean> {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     try {
-        const response = await fetch(`${API_URL}/health`);
+        const response = await fetch(`${API_BASE_URL}/health`);
         return response.ok;
     } catch (error) {
         return false;
