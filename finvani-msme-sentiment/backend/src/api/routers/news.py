@@ -46,6 +46,22 @@ def run_ingestion_task():
     except Exception as e:
         logger.error(f"Background ingestion failed: {e}")
 
+@router.get("/status")
+async def get_ingestion_status():
+    """Debug endpoint to check if data files exist."""
+    data_dir = get_data_dir()
+    if not data_dir.exists():
+        return {"status": "error", "message": "Data directory does not exist", "files": []}
+    
+    files = list(data_dir.glob("*.jsonl"))
+    file_info = [{"name": f.name, "size": f.stat().st_size, "modified": f.stat().st_mtime} for f in files]
+    return {
+        "status": "ok",
+        "count": len(files),
+        "files": file_info,
+        "path": str(data_dir)
+    }
+
 @router.post("/refresh")
 async def refresh_news(background_tasks: BackgroundTasks):
     """Trigger a fresh fetch of news from Google RSS."""
