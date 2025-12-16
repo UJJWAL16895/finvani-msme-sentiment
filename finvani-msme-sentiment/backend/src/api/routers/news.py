@@ -14,11 +14,9 @@ router = APIRouter(
 )
 
 def get_data_dir() -> Path:
-    # Resolve path relative to this file
-    current_dir = Path(__file__).resolve().parent
-    # Go up to project root
-    project_root = current_dir.parent.parent.parent.parent
-    return project_root / "data" / "raw"
+    # We are in /app in Docker.
+    # Safe way: use relative path from current working directory
+    return Path("data/raw").resolve()
 
 def get_latest_data_file() -> Path | None:
     data_dir = get_data_dir()
